@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # rootのパスワード
+      MYSQL_DATABASE: mydb  # 作成するデータベース
+      MYSQL_USER: user  # 新しいユーザー
+      MYSQL_PASSWORD: user  # ユーザーのパスワード
+    ports:
+      - "3306:3306"  # DBのポートをローカルマシンに公開
+    volumes:
+      - mysql-data:/var/lib/mysql  # データを保存する場所を永続化
+
+volumes:
+  mysql-data:

@@ -1,0 +1,24 @@
+# Python関連
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js関連
+node_modules/
+
+# Docker関連
+docker-compose.override.yml
+.docker/
+
+# 環境変数ファイル
+.env
+
+# その他、IDEの設定ファイル
+.idea/
+.vscode/
+
+# OS固有のファイル
+.DS_Store
+Thumbs.db
+.env
