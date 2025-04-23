@@ -13,7 +13,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
 
-  db:
+  mysql:
     image: mysql:8.0
     container_name: mysql-container
     environment:
@@ -37,13 +37,16 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
+    command: gunicorn -c gunicorn.conf.py app:app
 
 volumes:
   mysql-data:
