@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master  # master ブランチにプッシュされたときに実行
+  pull_request:
+    branches:
+      - master  # master ブランチに対するPRが作成されたとき
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用するOS（Ubuntu）
+    
+    steps:
+    # リポジトリのコードを取得
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Python と必要なパッケージをセットアップ
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    # 必要なパッケージをインストール
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # テストを実行
+    - name: Run tests
+      run: |
+        pytest
+
+    # Docker イメージのビルド
+    - name: Build Docker image
+      run: |
+        docker build -t web3-tier-backend .
+
+    # Docker イメージを Docker Hub へ Push（オプション）
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        docker tag web3-tier-backend $DOCKER_USERNAME/web3-tier-backend:latest
+        docker push $DOCKER_USERNAME/web3-tier-backend:latest
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
